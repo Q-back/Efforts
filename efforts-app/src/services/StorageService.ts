@@ -1,5 +1,6 @@
-import Dexie, { Table } from 'dexie'
-import { FocusSession } from '../types'
+import Dexie from 'dexie'
+import type { Table } from 'dexie'
+import type { FocusSession } from '../types'
 
 /**
  * Storage service for the application using Dexie.js (IndexedDB wrapper)

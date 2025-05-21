@@ -1,4 +1,4 @@
-import { FocusSession, SessionQuality, SessionStats, ComparableStats } from '../types'
+import type { FocusSession, SessionQuality, SessionStats, ComparableStats } from '../types'
 import dayjs from 'dayjs'
 
 /**

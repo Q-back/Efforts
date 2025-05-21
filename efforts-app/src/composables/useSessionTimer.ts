@@ -1,5 +1,5 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { FocusSession } from '../types'
+import type { FocusSession } from '../types'
 
 export function useSessionTimer(session: FocusSession | null) {
   const elapsedTime = ref(0) // in seconds

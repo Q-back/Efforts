@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { FocusSession, ComparableStats } from '../types'
+import type { FocusSession, ComparableStats } from '../types'
 import { storageService } from '../services/StorageService'
 import { compareStats } from '../utils/sessionUtils'
 import dayjs from 'dayjs'

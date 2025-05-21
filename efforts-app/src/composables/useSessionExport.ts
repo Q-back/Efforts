@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { FocusSession } from '../types'
+import type { FocusSession } from '../types'
 import { generateDailyReport } from '../utils/sessionUtils'
 import { storageService } from '../services/StorageService'
 

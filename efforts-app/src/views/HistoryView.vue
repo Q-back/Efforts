@@ -116,7 +116,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { FocusSession, SessionQuality } from '../types'
+import type { FocusSession, SessionQuality } from '../types'
 import { useStatsStore } from '../stores/statsStore'
 import { formatDuration, getQualityEmoji } from '../utils/sessionUtils'
 import { useSessionExport } from '../composables/useSessionExport'

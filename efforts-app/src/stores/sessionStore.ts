@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { FocusSession, SessionQuality } from '../types'
+import type { FocusSession, SessionQuality } from '../types'
 import { storageService } from '../services/StorageService'
 import { calculateSessionPoints } from '../utils/sessionUtils'
 import { v4 as uuidv4 } from 'uuid'
