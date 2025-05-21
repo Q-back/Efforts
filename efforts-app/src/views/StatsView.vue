@@ -7,7 +7,7 @@
       <button
         v-for="range in timeRanges"
         :key="range.value"
-        @click="activeTimeRange = range.value"
+        @click="activeTimeRange = range.value as 'day' | 'week' | 'month'"
         class="px-4 py-2 rounded-md transition-colors"
         :class="{
           'bg-primary-500 text-white': activeTimeRange === range.value,
@@ -97,7 +97,6 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useStatsStore } from '../stores/statsStore'
 import { formatDuration, getQualityEmoji } from '../utils/sessionUtils'
-import type { SessionQuality } from '../types'
 import StatCard from '../components/StatCard.vue'
 
 // Store

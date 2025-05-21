@@ -88,7 +88,7 @@
           <button
             v-for="option in ratingOptions"
             :key="option.value"
-            @click="selectedRating = option.value"
+            @click="selectedRating = option.value as SessionQuality"
             class="flex flex-col items-center px-6 py-3 rounded-lg transition-all"
             :class="{
               'bg-gray-100 dark:bg-gray-700': selectedRating !== option.value,
@@ -207,7 +207,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import { useSessionStore } from '../stores/sessionStore'
 import { useSessionTimer } from '../composables/useSessionTimer'
 import { useNotifications } from '../composables/useNotifications'
-import { formatDuration, getQualityEmoji } from '../utils/sessionUtils'
+import { formatDuration } from '../utils/sessionUtils'
 import type { SessionQuality } from '../types'
 import dayjs from 'dayjs'
 
@@ -219,7 +219,6 @@ const sessionStore = useSessionStore()
 
 // Timer composable
 const {
-  elapsedTime,
   isOvertime,
   progress,
   formattedTimeRemaining,
@@ -299,6 +298,9 @@ const submitRating = async () => {
   isSubmitting.value = true
   
   try {
+    if (selectedRating.value === null) {
+      throw new Error('Please select a rating before submitting')
+    }
     await sessionStore.rateSession(selectedRating.value, sessionNotes.value)
     router.push('/')
   } catch (error) {
