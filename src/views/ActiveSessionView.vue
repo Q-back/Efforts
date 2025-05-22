@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-[80vh]">
     <div 
-      class="space-y-6 transition-all duration-500 p-6"
+      class="space-y-4 sm:space-y-6 transition-all duration-500 p-4 sm:p-6"
       :class="{
         'bg-blue-50/50 dark:bg-gray-800/50': !isFinished && !editMode,
         'bg-purple-50/50 dark:bg-gray-800/30': isFinished && !editMode,
@@ -11,14 +11,14 @@
       <!-- Active Session -->
       <div 
         v-if="sessionStore.activeSession" 
-        class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg p-8"
+        class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg p-4 sm:p-8"
       >
-        <div class="flex justify-between items-start mb-6">
-          <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-0 mb-6">
+          <h2 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-200">
             {{ sessionStore.activeSession.title || 'Focus Session' }}
           </h2>
           
-          <div class="flex space-x-2">
+          <div class="flex flex-wrap gap-2 text-sm sm:text-base">
             <button
               @click="toggleEditMode"
               class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
@@ -41,13 +41,13 @@
         <!-- Session Content -->
         <div v-if="!editMode && !isFinished" class="mb-12 space-y-8">
           <!-- Session Goals -->
-          <div class="prose dark:prose-invert max-w-none markdown-preview bg-white/50 dark:bg-gray-900/50 p-6 rounded-lg border border-gray-200/50 dark:border-gray-700/50 text-left">
+          <div class="prose dark:prose-invert max-w-none markdown-preview bg-white/50 dark:bg-gray-900/50 p-3 sm:p-6 rounded-lg border border-gray-200/50 dark:border-gray-700/50 text-left">
             <vue-markdown-render v-if="sessionStore.activeSession.goals" :source="sessionStore.activeSession.goals"></vue-markdown-render>
             <span v-else class="text-gray-500 dark:text-gray-400">No goals set</span>
           </div>
 
           <!-- Timer -->
-          <div class="bg-white/80 dark:bg-gray-800/80 rounded-lg p-6 shadow-sm">
+          <div class="bg-white/80 dark:bg-gray-800/80 rounded-lg p-4 sm:p-6 shadow-sm">
             <div class="flex justify-between items-end mb-3">
               <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
                 {{ isOvertime ? 'Overtime' : 'Remaining' }}
@@ -69,7 +69,7 @@
             </div>
             
             <div class="flex justify-between items-baseline">
-              <div class="text-4xl font-bold tracking-tight" :class="{ 'text-amber-500': isOvertime }">
+              <div class="text-3xl sm:text-4xl font-bold tracking-tight" :class="{ 'text-amber-500': isOvertime }">
                 {{ isOvertime ? formattedElapsedTime : formattedTimeRemaining }}
               </div>
               
@@ -88,12 +88,12 @@
           >
             <div 
               class="relative bg-gradient-to-br from-white/80 to-white/40 dark:from-gray-900/80 dark:to-gray-900/40 
-                     p-8 rounded-xl border border-gray-200/50 dark:border-gray-700/50 
+                     p-4 sm:p-8 rounded-xl border border-gray-200/50 dark:border-gray-700/50 
                      shadow-lg backdrop-blur-sm"
               :key="randomQuote"
             >
               <div class="absolute inset-0 bg-primary-500/5 dark:bg-primary-400/5 rounded-xl"></div>
-              <p class="relative text-2xl italic text-gray-700 dark:text-gray-200 font-light leading-relaxed">
+              <p class="relative text-lg sm:text-2xl italic text-gray-700 dark:text-gray-200 font-light leading-relaxed">
                 {{ randomQuote }}
               </p>
             </div>
@@ -109,19 +109,19 @@
             <p class="text-gray-500 dark:text-gray-400">How well were you able to concentrate?</p>
           </div>
           
-          <div class="flex flex-wrap gap-4 justify-center">
+          <div class="flex flex-wrap gap-2 sm:gap-4 justify-center">
             <button
               v-for="option in ratingOptions"
               :key="option.value"
               @click="selectedRating = option.value as SessionQuality"
-              class="group flex flex-col items-center px-8 py-4 rounded-xl transition-all duration-200"
+              class="group flex flex-col items-center px-4 sm:px-8 py-3 sm:py-4 rounded-xl transition-all duration-200 flex-1 sm:flex-none"
               :class="{
                 'bg-white/50 dark:bg-gray-900/50 hover:bg-white/80 dark:hover:bg-gray-900/80': selectedRating !== option.value,
                 'bg-primary-50 dark:bg-primary-900/50 ring-2 ring-primary-500 shadow-lg shadow-primary-500/10': selectedRating === option.value
               }"
             >
-              <span class="text-3xl transform transition-transform duration-200 group-hover:scale-110">{{ option.emoji }}</span>
-              <span class="mt-2 font-medium text-lg">{{ option.label }}</span>
+              <span class="text-2xl sm:text-3xl transform transition-transform duration-200 group-hover:scale-110">{{ option.emoji }}</span>
+              <span class="mt-2 font-medium text-base sm:text-lg">{{ option.label }}</span>
             </button>
           </div>
           
@@ -173,8 +173,8 @@
     </div>
 
     <!-- Edit Session Modal -->
-    <div v-if="editMode" class="fixed inset-0 bg-gray-900/20 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] overflow-y-auto space-y-6">
+    <div v-if="editMode" class="fixed inset-0 bg-gray-900/20 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-4 sm:p-8 w-full max-w-3xl max-h-[90vh] overflow-y-auto space-y-4 sm:space-y-6">
         <h3 class="text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200">Edit Session</h3>
         
         <div>

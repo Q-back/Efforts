@@ -1,17 +1,17 @@
 <template>
   <header class="bg-white dark:bg-gray-800 shadow">
-    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    <div class="container mx-auto px-2 sm:px-4 py-3 flex justify-between items-center">
       <div class="flex items-center space-x-2">
         <LogoIcon class="text-primary-600 dark:text-primary-400" />
-        <h1 class="text-xl font-bold text-primary-600 dark:text-primary-400">Efforts</h1>
+        <h1 class="text-lg sm:text-xl font-bold text-primary-600 dark:text-primary-400">Efforts</h1>
       </div>
       
-      <nav>
-        <ul class="flex space-x-4 items-center">
+      <nav class="overflow-x-auto">
+        <ul class="flex space-x-1 sm:space-x-4 items-center whitespace-nowrap">
           <li>
             <RouterLink 
               to="/" 
-              class="px-3 py-2 rounded-md transition-colors" 
+              class="px-2 sm:px-3 py-2 text-sm sm:text-base rounded-md transition-colors" 
               :class="[
                 currentRoute === '/' 
                   ? 'bg-primary-50 text-primary-700 dark:bg-primary-900 dark:text-primary-300 font-medium' 
@@ -24,7 +24,7 @@
           <li>
             <RouterLink 
               to="/stats" 
-              class="px-3 py-2 rounded-md transition-colors"
+              class="px-2 sm:px-3 py-2 text-sm sm:text-base rounded-md transition-colors"
               :class="[
                 currentRoute === '/stats' 
                   ? 'bg-primary-50 text-primary-700 dark:bg-primary-900 dark:text-primary-300 font-medium' 
@@ -37,7 +37,7 @@
           <li>
             <RouterLink 
               to="/history" 
-              class="px-3 py-2 rounded-md transition-colors"
+              class="px-2 sm:px-3 py-2 text-sm sm:text-base rounded-md transition-colors"
               :class="[
                 currentRoute === '/history' 
                   ? 'bg-primary-50 text-primary-700 dark:bg-primary-900 dark:text-primary-300 font-medium' 
@@ -50,7 +50,7 @@
           <li v-if="hasActiveSession">
             <RouterLink 
               to="/session" 
-              class="px-3 py-2 rounded-md transition-colors"
+              class="px-2 sm:px-3 py-2 text-sm sm:text-base rounded-md transition-colors"
               :class="[
                 currentRoute === '/session' 
                   ? 'bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300 font-medium' 

@@ -42,9 +42,9 @@
     <!-- Sessions list -->
     <div v-else class="space-y-4">
       <div v-for="session in sessions" :key="session.id" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <div class="flex justify-between items-start mb-4">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
           <div>
-            <h3 class="text-xl font-medium text-gray-800 dark:text-gray-200">
+            <h3 class="text-lg sm:text-xl font-medium text-gray-800 dark:text-gray-200">
               {{ session.title || 'Untitled Session' }}
             </h3>
             <p class="text-sm text-gray-500 dark:text-gray-400">
@@ -52,20 +52,20 @@
             </p>
           </div>
           
-          <div class="flex items-center space-x-2">
+          <div class="flex flex-wrap items-center gap-2">
             <span 
-              class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+              class="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
               :class="getQualityClass(session.quality)"
             >
               {{ getQualityEmoji(session.quality) }} 
               {{ session.quality ? capitalize(session.quality) : 'Unrated' }}
             </span>
             
-            <span class="text-primary-600 dark:text-primary-400 font-bold">
+            <span class="text-primary-600 dark:text-primary-400 font-bold text-sm sm:text-base">
               {{ session.points }} pts
             </span>
             
-            <div class="flex items-center ml-2 gap-1">
+            <div class="flex items-center gap-1">
               <button 
                 @click="openEditSessionModal(session)" 
                 class="p-1.5 text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -91,7 +91,7 @@
         <div class="mb-6">
           <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2 text-left">Goals</h4>
           <div class="bg-gray-50/50 dark:bg-gray-900/50 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
-            <div class="prose dark:prose-invert text-base markdown-preview text-left">
+            <div class="prose dark:prose-invert text-sm sm:text-base markdown-preview text-left">
               <vue-markdown-render v-if="session.goals" :source="session.goals"></vue-markdown-render>
               <span v-else class="text-gray-500 dark:text-gray-400">No goals set</span>
             </div>
@@ -101,14 +101,14 @@
         <div v-if="session.notes" class="mb-6">
           <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2 text-left">Notes</h4>
           <div class="bg-gray-50/50 dark:bg-gray-900/50 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
-            <div class="prose dark:prose-invert text-base markdown-preview text-left">
+            <div class="prose dark:prose-invert text-sm sm:text-base markdown-preview text-left">
               <vue-markdown-render :source="session.notes"></vue-markdown-render>
             </div>
           </div>
         </div>
         
         <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
-          <div class="text-sm">
+          <div class="text-xs sm:text-sm">
             <span class="text-gray-500 dark:text-gray-400">Duration: </span>
             <span class="font-medium">{{ formatDuration(session.actualDuration) }}</span>
             
@@ -121,7 +121,7 @@
           
           <button 
             @click="exportSession(session)" 
-            class="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
+            class="text-xs sm:text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
           >
             Copy to clipboard
           </button>
@@ -132,7 +132,7 @@
       <div class="flex justify-end mt-4">
         <button 
           @click="exportAll" 
-          class="btn btn-primary"
+          class="btn btn-primary text-sm sm:text-base"
           :disabled="isExporting"
         >
           {{ isExporting ? 'Exporting...' : 'Copy all sessions to clipboard' }}

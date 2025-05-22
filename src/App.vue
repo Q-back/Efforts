@@ -20,7 +20,7 @@ onMounted(async () => {
     <div class="w-full bg-primary-50 dark:bg-gray-900 transition-colors duration-500 flex-grow">
       <AppHeader />
 
-      <main class="max-w-4xl w-full mx-auto px-4 py-6">
+      <main class="max-w-4xl w-full mx-auto px-2 sm:px-4 py-3 sm:py-6">
         <RouterView v-slot="{ Component }">
           <Transition
             enter-active-class="transition-opacity duration-150"
