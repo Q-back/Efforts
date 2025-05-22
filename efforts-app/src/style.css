@@ -2,6 +2,189 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom styles for markdown content */
+@layer components {
+  .markdown-preview .prose {
+    @apply text-gray-800 dark:text-gray-200;
+  }
+  
+  .markdown-preview .prose h1,
+  .markdown-preview .prose h2,
+  .markdown-preview .prose h3,
+  .markdown-preview .prose h4,
+  .markdown-preview .prose h5,
+  .markdown-preview .prose h6 {
+    @apply font-bold mb-2;
+  }
+  
+  .markdown-preview .prose h1 { @apply text-xl; }
+  .markdown-preview .prose h2 { @apply text-lg; }
+  .markdown-preview .prose h3 { @apply text-base; }
+  
+  .markdown-preview .prose ul { @apply list-disc ml-5; }
+  .markdown-preview .prose ol { @apply list-decimal ml-5; }
+  .markdown-preview .prose p { @apply my-2; }
+  
+  .markdown-preview .prose pre { 
+    @apply bg-gray-100 dark:bg-gray-800 p-2 rounded overflow-x-auto my-2;
+  }
+  
+  .markdown-preview .prose code { 
+    @apply font-mono text-sm bg-gray-100 dark:bg-gray-800 px-1 rounded;
+  }
+  
+  .markdown-preview .prose blockquote {
+    @apply border-l-4 border-gray-300 dark:border-gray-700 pl-4 italic my-2;
+  }
+}
+
+@layer components {
+  .markdown-preview-wrapper {
+    @apply bg-gray-50 dark:bg-gray-900 p-3 rounded border border-gray-200 dark:border-gray-700 mt-2;
+  }
+  
+  /* Style the rendered markdown content */
+  .markdown-preview .prose h1 { @apply text-xl font-bold; }
+  .markdown-preview .prose h2 { @apply text-lg font-bold; }
+  .markdown-preview .prose h3 { @apply text-base font-bold; }
+  .markdown-preview .prose ul { @apply list-disc ml-5; }
+  .markdown-preview .prose ol { @apply list-decimal ml-5; }
+  .markdown-preview .prose p { @apply my-2; }
+  .markdown-preview .prose a { @apply text-primary-600 dark:text-primary-400 hover:underline; }
+  .markdown-preview .prose code { @apply font-mono text-sm bg-gray-100 dark:bg-gray-800 px-1 rounded; }
+  .markdown-preview .prose pre { @apply bg-gray-100 dark:bg-gray-800 p-2 rounded overflow-x-auto; }
+  .markdown-preview .prose blockquote { @apply border-l-4 border-gray-300 dark:border-gray-700 pl-4 italic; }
+}
+
+/* Markdown Editing Experience */
+.markdown-preview .prose {
+  color: var(--color-gray-800);
+}
+.dark .markdown-preview .prose {
+  color: var(--color-gray-200);
+}
+
+.markdown-preview .prose h1,
+.markdown-preview .prose h2,
+.markdown-preview .prose h3,
+.markdown-preview .prose h4,
+.markdown-preview .prose h5,
+.markdown-preview .prose h6 {
+  color: var(--color-gray-900);
+  font-weight: bold;
+}
+.dark .markdown-preview .prose h1,
+.dark .markdown-preview .prose h2,
+.dark .markdown-preview .prose h3,
+.dark .markdown-preview .prose h4,
+.dark .markdown-preview .prose h5,
+.dark .markdown-preview .prose h6 {
+  color: var(--color-gray-100);
+}
+
+.markdown-preview .prose code {
+  background-color: var(--color-gray-100);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  color: var(--color-gray-900);
+}
+.dark .markdown-preview .prose code {
+  background-color: var(--color-gray-800);
+  color: var(--color-gray-100);
+}
+
+.markdown-preview .prose ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+}
+
+.markdown-preview .prose ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+}
+
+.markdown-preview .prose a {
+  color: var(--color-primary-600);
+}
+.dark .markdown-preview .prose a {
+  color: var(--color-primary-400);
+}
+.markdown-preview .prose a:hover {
+  text-decoration: underline;
+}
+
+.markdown-preview .prose blockquote {
+  border-left: 4px solid var(--color-gray-300);
+  padding-left: 1rem;
+  font-style: italic;
+}
+.dark .markdown-preview .prose blockquote {
+  border-left-color: var(--color-gray-700);
+}
+
+textarea#goals {
+  font-family: monospace;
+}
+
+textarea#goals::placeholder {
+  color: var(--color-gray-400);
+}
+.dark textarea#goals::placeholder {
+  color: var(--color-gray-500);
+}
+
+/* Add syntax highlighting for markdown in the textarea */
+textarea#goals {
+  caret-color: #38bdf8;
+}
+
+/* Markdown Editing Experience */
+.markdown-preview .prose {
+  @apply text-gray-800 dark:text-gray-200;
+}
+
+.markdown-preview .prose h1,
+.markdown-preview .prose h2,
+.markdown-preview .prose h3,
+.markdown-preview .prose h4,
+.markdown-preview .prose h5,
+.markdown-preview .prose h6 {
+  @apply text-gray-900 dark:text-gray-100 font-bold;
+}
+
+.markdown-preview .prose code {
+  @apply bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-gray-900 dark:text-gray-100;
+}
+
+.markdown-preview .prose ul {
+  @apply list-disc pl-5;
+}
+
+.markdown-preview .prose ol {
+  @apply list-decimal pl-5;
+}
+
+.markdown-preview .prose a {
+  @apply text-primary-600 dark:text-primary-400 hover:underline;
+}
+
+.markdown-preview .prose blockquote {
+  @apply border-l-4 border-gray-300 dark:border-gray-700 pl-4 italic;
+}
+
+textarea#goals {
+  @apply font-mono;
+}
+
+textarea#goals::placeholder {
+  @apply text-gray-400 dark:text-gray-500;
+}
+
+/* Add syntax highlighting for markdown in the textarea */
+textarea#goals {
+  caret-color: #38bdf8;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

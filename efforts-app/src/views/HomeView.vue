@@ -19,15 +19,26 @@
         
         <div>
           <label for="goals" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Goals (Markdown supported)
+            Goals 
+            <span class="text-xs">
+              (<a href="https://www.markdownguide.org/basic-syntax/" target="_blank" class="text-primary-600 dark:text-primary-400 hover:underline">Markdown</a> supported)
+            </span>
           </label>
           <textarea
             id="goals"
             v-model="goals"
             rows="3"
             placeholder="What do you want to accomplish?"
-            class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-gray-900 dark:text-gray-100"
+            class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-gray-900 dark:text-gray-100 font-mono"
           ></textarea>
+          
+          <!-- Markdown Preview -->
+          <div v-if="goals" class="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Preview:</p>
+            <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none">
+              <vue-markdown-render :source="goals"></vue-markdown-render>
+            </div>
+          </div>
         </div>
         
         <div>
@@ -117,6 +128,8 @@ import { useSessionStore } from '../stores/sessionStore'
 import { useSessionExport } from '../composables/useSessionExport'
 import { useStatsStore } from '../stores/statsStore'
 import { formatDuration } from '../utils/sessionUtils'
+import VueMarkdownRender from 'vue-markdown-render'
+import 'marked'
 
 // Router
 const router = useRouter()
@@ -139,7 +152,7 @@ const todayStats = computed(() => {
     totalSessions: 0,
     totalFocusTime: 0,
     totalPoints: 0,
-    qualityDistribution: { poor: 0, normal: 0, great: 0, deep: 0 },
+    qualityDistribution: { poor: 0, normal: 0, great: 0 },
     averageSessionLength: 0,
   }
 })
@@ -181,3 +194,47 @@ const exportToday = async () => {
   }
 }
 </script>
+
+<style>
+/* Markdown styling */
+.markdown-preview .prose h1 { font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem; }
+.markdown-preview .prose h2 { font-size: 1.125rem; font-weight: bold; margin-bottom: 0.5rem; }
+.markdown-preview .prose h3 { font-size: 1rem; font-weight: bold; margin-bottom: 0.5rem; }
+
+.markdown-preview .prose ul { list-style-type: disc; margin-left: 1.25rem; }
+.markdown-preview .prose ol { list-style-type: decimal; margin-left: 1.25rem; }
+.markdown-preview .prose p { margin: 0.5rem 0; }
+
+.markdown-preview .prose code { 
+  font-family: monospace; 
+  font-size: 0.875rem; 
+  background-color: rgba(0, 0, 0, 0.05); 
+  padding: 0 0.25rem; 
+  border-radius: 0.25rem; 
+}
+.dark .markdown-preview .prose code {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.markdown-preview .prose pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  width: auto;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+}
+.dark .markdown-preview .prose pre {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.markdown-preview .prose blockquote {
+  border-left: 4px solid rgba(0, 0, 0, 0.1);
+  padding-left: 1rem;
+  font-style: italic;
+  margin: 0.5rem 0;
+}
+.dark .markdown-preview .prose blockquote {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+</style>

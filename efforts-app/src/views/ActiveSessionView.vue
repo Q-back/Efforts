@@ -73,8 +73,9 @@
       <!-- Session Goals -->
       <div v-if="!editMode" class="mt-6">
         <h3 class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">Goals</h3>
-        <div class="prose dark:prose-invert max-w-none">
-          {{ sessionStore.activeSession.goals || 'No goals set' }}
+        <div class="prose dark:prose-invert max-w-none markdown-preview">
+          <vue-markdown-render v-if="sessionStore.activeSession.goals" :source="sessionStore.activeSession.goals"></vue-markdown-render>
+          <span v-else>No goals set</span>
         </div>
       </div>
       
@@ -149,13 +150,24 @@
         <div>
           <label for="editGoals" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Goals
+            <span class="text-xs">
+              (<a href="https://www.markdownguide.org/basic-syntax/" target="_blank" class="text-primary-600 dark:text-primary-400 hover:underline">Markdown</a> supported)
+            </span>
           </label>
           <textarea
             id="editGoals"
             v-model="editableSession.goals"
             rows="3"
-            class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
+            class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm font-mono"
           ></textarea>
+          
+          <!-- Markdown Preview -->
+          <div v-if="editableSession.goals" class="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Preview:</p>
+            <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none">
+              <vue-markdown-render :source="editableSession.goals"></vue-markdown-render>
+            </div>
+          </div>
         </div>
         
         <div>
@@ -210,6 +222,8 @@ import { useNotifications } from '../composables/useNotifications'
 import { formatDuration } from '../utils/sessionUtils'
 import type { SessionQuality } from '../types'
 import dayjs from 'dayjs'
+import VueMarkdownRender from 'vue-markdown-render'
+import 'marked'
 
 // Router
 const router = useRouter()
@@ -373,3 +387,46 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style>
+/* Markdown styling */
+.markdown-preview .prose h1 { font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem; }
+.markdown-preview .prose h2 { font-size: 1.125rem; font-weight: bold; margin-bottom: 0.5rem; }
+.markdown-preview .prose h3 { font-size: 1rem; font-weight: bold; margin-bottom: 0.5rem; }
+
+.markdown-preview .prose ul { list-style-type: disc; margin-left: 1.25rem; }
+.markdown-preview .prose ol { list-style-type: decimal; margin-left: 1.25rem; }
+.markdown-preview .prose p { margin: 0.5rem 0; }
+
+.markdown-preview .prose code { 
+  font-family: monospace; 
+  font-size: 0.875rem; 
+  background-color: rgba(0, 0, 0, 0.05); 
+  padding: 0 0.25rem; 
+  border-radius: 0.25rem; 
+}
+.dark .markdown-preview .prose code {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.markdown-preview .prose pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+}
+.dark .markdown-preview .prose pre {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.markdown-preview .prose blockquote {
+  border-left: 4px solid rgba(0, 0, 0, 0.1);
+  padding-left: 1rem;
+  font-style: italic;
+  margin: 0.5rem 0;
+}
+.dark .markdown-preview .prose blockquote {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+</style>

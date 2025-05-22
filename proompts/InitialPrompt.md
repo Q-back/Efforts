@@ -82,6 +82,7 @@ For linter please use prettier and maybe eslint? IDK what's the top linter for T
 For tests I suggest vitest and playwright.
 Can we do it serverless? So the all data is saved in local storage. Is it good idea? Or maybe I should consider something else?
 For CSS maybe tailwind? Do you have something better?
+Please use pnpm as package manager.
 ## Git
 Please initialize `.gitignore` for the project.
 ## Future
