@@ -7,6 +7,6 @@ echo "Building app in production mode..."
 NODE_ENV=production pnpm build
 
 echo "Starting local server on port 4173..."
-pnpm preview
+pnpm preview --base=/Efforts/
 
-echo "Open http://localhost:4173 in your browser to test the production build."
+echo "Open http://localhost:4173/Efforts/ in your browser to test the production build."
