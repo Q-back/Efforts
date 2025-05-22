@@ -189,6 +189,7 @@
                 <vue-markdown-render :source="editForm.notes"></vue-markdown-render>
               </div>
             </div>
+            
           </div>
           
           <div>

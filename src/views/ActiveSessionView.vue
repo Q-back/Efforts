@@ -108,9 +108,17 @@
           <textarea
             v-model="sessionNotes"
             rows="3"
-            class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
+            class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm font-mono"
             placeholder="How did this session go? Any insights or challenges?"
           ></textarea>
+
+          <!-- Notes Preview -->
+          <div v-if="sessionNotes" class="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Preview:</p>
+            <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none text-left">
+              <vue-markdown-render :source="sessionNotes"></vue-markdown-render>
+            </div>
+          </div>
         </div>
         
         <div class="flex justify-end space-x-3">
