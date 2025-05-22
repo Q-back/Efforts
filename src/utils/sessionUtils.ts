@@ -2,34 +2,45 @@ import type { FocusSession, SessionQuality, SessionStats, ComparableStats } from
 import dayjs from 'dayjs'
 
 /**
- * Calculate points for a focus session based on quality and duration
+ * Calculate points for a focus session based on quality and duration.
+ * Points system:
+ * 1. Base points by quality:
+ *    - 💩 Poor (5): For sessions with difficulty maintaining focus
+ *    - ⚖️ Normal (20): For standard focus sessions
+ *    - 🔥 Great (40): For high-quality focus sessions
+ *    - 💠 Deep focus (60): For exceptional focus sessions
+ * 2. Additional points based on duration (scaled by quality):
+ *    - Poor: 1 point per 10 minutes
+ *    - Normal: 1 point per 5 minutes
+ *    - Great: 1 point per ~3 minutes
+ *    - Deep: 1 point per 2.5 minutes
  */
 export function calculateSessionPoints(session: FocusSession): number {
   if (session.status !== 'completed' || !session.quality) {
     return 0
   }
   
-  // Base points for completing a session
-  let points = 10
-  
-  // Points based on session quality
+  // Base points based on session quality - this is the main factor now
   const qualityPoints = {
-    'poor': 5,
-    'normal': 10,
-    'great': 20,
-    'deep': 30,
+    'poor': 5,     // Significantly reduced for poor focus
+    'normal': 20,  // Standard points for normal focus
+    'great': 40,   // Great focus gets double the normal points
+    'deep': 60     // Deep focus gets triple the normal points
   }
   
-  points += qualityPoints[session.quality]
+  let points = qualityPoints[session.quality]
   
-  // Points based on duration (1 point per 5 minutes)
-  const durationPoints = Math.floor(session.actualDuration / 5)
+  // Additional points based on duration (scaled by quality)
+  // Poor sessions get fewer points per minute to reflect reduced effectiveness
+  const durationMultiplier = {
+    'poor': 0.1,    // 1 point per 10 minutes
+    'normal': 0.2,  // 1 point per 5 minutes
+    'great': 0.3,   // ~1 point per 3 minutes
+    'deep': 0.4     // 1 point per 2.5 minutes
+  }
+  
+  const durationPoints = Math.floor(session.actualDuration * durationMultiplier[session.quality])
   points += durationPoints
-  
-  // Bonus points for completing planned duration
-  if (session.actualDuration >= session.plannedDuration) {
-    points += 15
-  }
   
   return points
 }
