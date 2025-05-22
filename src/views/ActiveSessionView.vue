@@ -1,13 +1,6 @@
 <template>
   <div class="min-h-[80vh]">
-    <div 
-      class="space-y-4 sm:space-y-6 transition-all duration-500 p-4 sm:p-6"
-      :class="{
-        'bg-blue-50/50 dark:bg-gray-800/50': !isFinished && !editMode,
-        'bg-purple-50/50 dark:bg-gray-800/30': isFinished && !editMode,
-        'bg-gray-50/50 dark:bg-gray-800/70': editMode
-      }"
-    >
+    <div class="space-y-4 sm:space-y-6 p-4 sm:p-6">
       <!-- Active Session -->
       <div 
         v-if="sessionStore.activeSession" 
