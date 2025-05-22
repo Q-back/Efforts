@@ -1,4 +1,14 @@
 import type { FocusSession, SessionQuality, SessionStats, ComparableStats } from '../types'
+
+/**
+ * Extract a title from the first line of goals, removing any markdown headers
+ */
+export function extractSessionTitle(goals: string): string {
+  if (!goals) return 'Untitled Session'
+  const firstLine = goals.split('\n')[0]
+  return firstLine.replace(/^#+\s*/, '').trim() || 'Untitled Session'
+}
+
 import dayjs from 'dayjs'
 
 /**
@@ -161,7 +171,8 @@ export function sessionToMarkdown(session: FocusSession): string {
     : 'ongoing'
   
   // Build markdown
-  let markdown = `# Focus session ${startTime} - ${endTime}\n`
+  let markdown = `# ${extractSessionTitle(session.goals)}\n`
+  markdown += `_Session time: ${startTime} - ${endTime}_\n\n`
   
   // Goals
   markdown += `## Goal\n${session.goals}\n`

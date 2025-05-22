@@ -1,6 +1,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import type { FocusSession } from '../types'
 import { useNotifications } from './useNotifications'
+import { extractSessionTitle } from '../utils/sessionUtils'
 
 export function useSessionTimer(session: FocusSession | null) {
   const { showSessionCompleteNotification } = useNotifications()
@@ -96,7 +97,7 @@ export function useSessionTimer(session: FocusSession | null) {
       // Check for overtime and notify when first entering overtime
       if (!isOvertime.value && timeRemaining.value === 0) {
         isOvertime.value = true
-        showSessionCompleteNotification(session?.title)
+        showSessionCompleteNotification(session ? extractSessionTitle(session.goals) : undefined)
       }
     }, 1000) as unknown as number
     

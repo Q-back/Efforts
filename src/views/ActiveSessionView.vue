@@ -8,7 +8,7 @@
       >
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-0 mb-6">
           <h2 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-200">
-            {{ sessionStore.activeSession.title || 'Focus Session' }}
+            {{ sessionStore.activeSession ? extractSessionTitle(sessionStore.activeSession.goals) : 'Focus Session' }}
           </h2>
           
           <div class="flex flex-wrap gap-2 text-sm sm:text-base">
@@ -171,18 +171,6 @@
         <h3 class="text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200">Edit Session</h3>
         
         <div>
-          <label for="editTitle" class="block text-base font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Session Title
-          </label>
-          <input
-            id="editTitle"
-            v-model="editableSession.title"
-            type="text"
-            class="mt-1 block w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-lg"
-          />
-        </div>
-        
-        <div>
           <label for="editGoals" class="block text-base font-semibold text-gray-700 dark:text-gray-300 mb-2">
             Goals
             <span class="text-sm font-normal">
@@ -263,7 +251,7 @@ import { useSessionTimer } from '../composables/useSessionTimer'
 import { useNotifications } from '../composables/useNotifications'
 
 // Utils and types
-import { formatDuration } from '../utils/sessionUtils'
+import { formatDuration, extractSessionTitle } from '../utils/sessionUtils'
 import type { SessionQuality } from '../types'
 
 // Third party
@@ -321,7 +309,6 @@ const sessionNotes = ref('')
 
 // Editable session data
 const editableSession = reactive({
-  title: '',
   goals: '',
   plannedDuration: 0,
 })
@@ -397,7 +384,6 @@ const cancelSession = async () => {
 const loadSessionEdits = () => {
   if (!sessionStore.activeSession) return
   
-  editableSession.title = sessionStore.activeSession.title
   editableSession.goals = sessionStore.activeSession.goals
   editableSession.plannedDuration = sessionStore.activeSession.plannedDuration
 }
@@ -414,7 +400,6 @@ const saveSessionEdits = async () => {
   
   try {
     await sessionStore.updateActiveSession({
-      title: editableSession.title,
       goals: editableSession.goals,
       plannedDuration: editableSession.plannedDuration,
     })

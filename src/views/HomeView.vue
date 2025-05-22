@@ -5,19 +5,6 @@
       
       <form @submit.prevent="startSession" class="space-y-6">
         <div>
-          <label for="title" class="block text-base font-semibold text-gray-700 dark:text-gray-300 mb-2 text-left">
-            Session Title
-          </label>
-          <input
-            id="title"
-            v-model="title"
-            type="text"
-            placeholder="What are you working on?"
-            class="mt-1 block w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-lg"
-          />
-        </div>
-        
-        <div>
           <label for="goals" class="block text-base font-semibold text-gray-700 dark:text-gray-300 mb-2 text-left">
             Goals 
             <span class="text-sm font-normal">
@@ -161,7 +148,6 @@ const sessionStore = useSessionStore()
 const statsStore = useStatsStore()
 
 // Form data
-const title = ref('')
 const goals = ref('')
 const duration = ref(25) // Default to 25 minutes (pomodoro)
 
@@ -188,13 +174,11 @@ const startSession = async () => {
   
   try {
     await sessionStore.startSession(
-      title.value,
       goals.value,
       duration.value,
     )
     
     // Clear form
-    title.value = ''
     goals.value = ''
     
     // Navigate to session view

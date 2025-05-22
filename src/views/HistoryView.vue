@@ -45,7 +45,7 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
           <div>
             <h3 class="text-lg sm:text-xl font-medium text-gray-800 dark:text-gray-200">
-              {{ session.title || 'Untitled Session' }}
+              {{ extractSessionTitle(session.goals) }}
             </h3>
             <p class="text-sm text-gray-500 dark:text-gray-400">
               {{ formatSessionTime(session) }}
@@ -146,17 +146,6 @@
         <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Edit Session</h2>
         
         <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Title
-            </label>
-            <input 
-              v-model="editForm.title" 
-              type="text" 
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-            />
-          </div>
-          
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Goals <span class="text-xs">(<a href="https://www.markdownguide.org/basic-syntax/" target="_blank" class="text-primary-600 dark:text-primary-400 hover:underline">Markdown</a> supported)</span>
@@ -297,7 +286,7 @@
 import { ref, computed, onMounted } from 'vue'
 import type { FocusSession, SessionQuality } from '../types'
 import { useStatsStore } from '../stores/statsStore'
-import { formatDuration, getQualityEmoji, calculateSessionPoints } from '../utils/sessionUtils'
+import { formatDuration, getQualityEmoji, calculateSessionPoints, extractSessionTitle } from '../utils/sessionUtils'
 import { useSessionExport } from '../composables/useSessionExport'
 import dayjs from 'dayjs'
 import VueMarkdownRender from 'vue-markdown-render'
@@ -317,7 +306,6 @@ const sessionToDelete = ref<FocusSession | null>(null)
 
 // Form state
 const editForm = ref({
-  title: '',
   goals: '',
   notes: '',
   quality: null as SessionQuality | null
@@ -434,7 +422,6 @@ const exportAll = async () => {
 const openEditSessionModal = (session: FocusSession) => {
   sessionToEdit.value = session
   editForm.value = {
-    title: session.title,
     goals: session.goals,
     notes: session.notes,
     quality: session.quality
@@ -449,7 +436,6 @@ const saveEditedSession = async () => {
     // Create updated session object
     const updatedSession: FocusSession = {
       ...sessionToEdit.value,
-      title: editForm.value.title,
       goals: editForm.value.goals,
       notes: editForm.value.notes,
       quality: editForm.value.quality

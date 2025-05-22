@@ -2,8 +2,7 @@ export type SessionQuality = 'poor' | 'normal' | 'great' | 'deep'
 
 export interface FocusSession {
   id: string
-  title: string
-  goals: string // Markdown formatted text
+  goals: string // Markdown formatted text, first line can be used as title
   plannedDuration: number // in minutes
   actualDuration: number // in minutes
   startTime: Date

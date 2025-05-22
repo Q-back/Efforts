@@ -28,7 +28,7 @@ export const useSessionStore = defineStore('session', {
     /**
      * Start a new focus session
      */
-    async startSession(title: string = '', goals: string = '', plannedDuration: number = 0) {
+    async startSession(goals: string = '', plannedDuration: number = 0) {
       try {
         // Check if there's already an active session
         if (this.activeSession) {
@@ -38,7 +38,6 @@ export const useSessionStore = defineStore('session', {
         // Create a new session
         const newSession: FocusSession = {
           id: uuidv4(),
-          title,
           goals,
           plannedDuration,
           actualDuration: 0,
