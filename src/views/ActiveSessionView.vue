@@ -54,7 +54,7 @@
           </div>
           
           <div v-if="plannedDuration > 0" class="text-sm text-gray-500 dark:text-gray-400">
-            {{ formattedElapsedTime }} / {{ formatDuration(plannedDuration * 60) }}
+            {{ formattedElapsedTime }} / {{ formatDuration(plannedDuration) }}
           </div>
         </div>
       </div>
