@@ -88,18 +88,22 @@
           </div>
         </div>
         
-        <div class="prose dark:prose-invert max-w-none mb-4">
-          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Goals:</h4>
-          <div class="text-sm markdown-preview text-left">
-            <vue-markdown-render v-if="session.goals" :source="session.goals"></vue-markdown-render>
-            <span v-else>No goals set</span>
+        <div class="mb-6">
+          <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2 text-left">Goals</h4>
+          <div class="bg-gray-50/50 dark:bg-gray-900/50 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
+            <div class="prose dark:prose-invert text-base markdown-preview text-left">
+              <vue-markdown-render v-if="session.goals" :source="session.goals"></vue-markdown-render>
+              <span v-else class="text-gray-500 dark:text-gray-400">No goals set</span>
+            </div>
           </div>
         </div>
         
-        <div v-if="session.notes" class="prose dark:prose-invert max-w-none mb-4">
-          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Notes:</h4>
-          <div class="text-sm markdown-preview text-left">
-            <vue-markdown-render :source="session.notes"></vue-markdown-render>
+        <div v-if="session.notes" class="mb-6">
+          <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2 text-left">Notes</h4>
+          <div class="bg-gray-50/50 dark:bg-gray-900/50 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
+            <div class="prose dark:prose-invert text-base markdown-preview text-left">
+              <vue-markdown-render :source="session.notes"></vue-markdown-render>
+            </div>
           </div>
         </div>
         
@@ -137,8 +141,8 @@
     </div>
     
     <!-- Edit Session Modal -->
-    <div v-if="isEditModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
+    <div v-if="isEditModalOpen" class="fixed inset-0 bg-gray-900/20 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
         <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Edit Session</h2>
         
         <div class="space-y-4">

@@ -1,11 +1,11 @@
 <template>
   <div class="space-y-6">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-      <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">Start a Focus Session</h2>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+      <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-200 text-left">Start a Focus Session</h2>
       
-      <form @submit.prevent="startSession" class="space-y-4">
+      <form @submit.prevent="startSession" class="space-y-6">
         <div>
-          <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label for="title" class="block text-base font-semibold text-gray-700 dark:text-gray-300 mb-2 text-left">
             Session Title
           </label>
           <input
@@ -13,14 +13,14 @@
             v-model="title"
             type="text"
             placeholder="What are you working on?"
-            class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-gray-900 dark:text-gray-100"
+            class="mt-1 block w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-lg"
           />
         </div>
         
         <div>
-          <label for="goals" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label for="goals" class="block text-base font-semibold text-gray-700 dark:text-gray-300 mb-2 text-left">
             Goals 
-            <span class="text-xs">
+            <span class="text-sm font-normal">
               (<a href="https://www.markdownguide.org/basic-syntax/" target="_blank" class="text-primary-600 dark:text-primary-400 hover:underline">Markdown</a> supported)
             </span>
           </label>
@@ -29,20 +29,20 @@
             v-model="goals"
             rows="3"
             placeholder="What do you want to accomplish?"
-            class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-gray-900 dark:text-gray-100 font-mono"
+            class="mt-1 block w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-lg font-mono"
           ></textarea>
           
           <!-- Markdown Preview -->
-          <div v-if="goals" class="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Preview:</p>
-            <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none text-left">
+          <div v-if="goals" class="mt-2 p-4 bg-gray-50/50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700">
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Preview:</p>
+            <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none text-left text-[0.95em]">
               <vue-markdown-render :source="goals"></vue-markdown-render>
             </div>
           </div>
         </div>
         
         <div>
-          <label for="duration" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label for="duration" class="block text-base font-semibold text-gray-700 dark:text-gray-300 mb-2 text-left">
             Planned Duration (minutes)
           </label>
           <input
@@ -52,17 +52,30 @@
             min="0"
             max="480"
             step="5"
-            class="mt-1 block w-48 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-gray-900 dark:text-gray-100"
+            class="mt-1 block w-48 px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-lg"
           />
         </div>
         
-        <div class="flex space-x-3 pt-2">
+        <div class="flex pt-4">
           <button
             type="submit"
-            class="btn btn-primary px-8 py-3 text-base"
+            class="w-full sm:w-auto btn btn-primary px-8 py-4 text-lg font-semibold rounded-xl 
+                   bg-gradient-to-br from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500
+                   transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] active:duration-75
+                   shadow-lg hover:shadow-primary-500/25 active:shadow
+                   disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
             :disabled="isStarting"
           >
-            {{ isStarting ? 'Starting...' : 'Start Focus Session' }}
+            <span class="flex items-center justify-center space-x-2">
+              <span>{{ isStarting ? 'Starting...' : 'Start Focus Session' }}</span>
+              <svg v-if="!isStarting" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+              </svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" class="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </span>
           </button>
         </div>
       </form>
@@ -88,33 +101,42 @@
       </div>
     </div>
     
-    <div v-if="todayStats.totalSessions > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-      <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Today's Progress</h2>
+    <div v-if="todayStats.totalSessions > 0" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+      <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200 text-left">Today's Progress</h2>
       
       <div class="grid md:grid-cols-3 gap-4">
-        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg text-center">
+        <div class="bg-gradient-to-br from-gray-50/80 to-gray-50/50 dark:from-gray-700/80 dark:to-gray-700/50 p-6 rounded-lg text-center backdrop-blur-sm shadow-sm">
           <p class="text-gray-500 dark:text-gray-400 text-sm">Total Focus Time</p>
           <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">{{ formatDuration(todayStats.totalFocusTime) }}</p>
         </div>
         
-        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg text-center">
-          <p class="text-gray-500 dark:text-gray-400 text-sm">Sessions Completed</p>
+        <div class="bg-gradient-to-br from-gray-50/80 to-gray-50/50 dark:from-gray-700/80 dark:to-gray-700/50 p-6 rounded-lg text-center backdrop-blur-sm shadow-sm">
+          <p class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Sessions Completed</p>
           <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">{{ todayStats.totalSessions }}</p>
         </div>
         
-        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg text-center">
-          <p class="text-gray-500 dark:text-gray-400 text-sm">Points Earned</p>
+        <div class="bg-gradient-to-br from-gray-50/80 to-gray-50/50 dark:from-gray-700/80 dark:to-gray-700/50 p-6 rounded-lg text-center backdrop-blur-sm shadow-sm">
+          <p class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Points Earned</p>
           <p class="text-2xl font-bold text-primary-600 dark:text-primary-400">{{ todayStats.totalPoints }}</p>
         </div>
       </div>
       
-      <div class="mt-4 text-right">
+      <div class="mt-6 flex justify-end">
         <button
           @click="exportToday"
-          class="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
+          class="inline-flex items-center space-x-2 px-4 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 
+                 hover:text-primary-700 dark:hover:text-primary-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 
+                 rounded-lg transition-colors duration-200"
           :disabled="isExporting"
         >
-          {{ isExporting ? 'Exporting...' : 'Copy today\'s report to clipboard' }}
+          <span>{{ isExporting ? 'Exporting...' : 'Copy today\'s report to clipboard' }}</span>
+          <svg v-if="!isExporting" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
         </button>
       </div>
     </div>

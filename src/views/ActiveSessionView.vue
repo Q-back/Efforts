@@ -1,164 +1,198 @@
 <template>
-  <div class="space-y-6">
-    <div v-if="sessionStore.activeSession" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-      <div class="flex justify-between items-start mb-6">
-        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
-          {{ sessionStore.activeSession.title || 'Focus Session' }}
-        </h2>
-        
-        <div class="flex space-x-2">
-          <button
-            @click="toggleEditMode"
-            class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-            v-if="!isFinished"
-          >
-            <span v-if="editMode">Cancel Edit</span>
-            <span v-else>Edit Session</span>
-          </button>
+  <div class="min-h-[80vh]">
+    <div 
+      class="space-y-6 transition-all duration-500 p-6"
+      :class="{
+        'bg-blue-50/50 dark:bg-gray-800/50': !isFinished && !editMode,
+        'bg-purple-50/50 dark:bg-gray-800/30': isFinished && !editMode,
+        'bg-gray-50/50 dark:bg-gray-800/70': editMode
+      }"
+    >
+      <!-- Active Session -->
+      <div 
+        v-if="sessionStore.activeSession" 
+        class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg p-8"
+      >
+        <div class="flex justify-between items-start mb-6">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+            {{ sessionStore.activeSession.title || 'Focus Session' }}
+          </h2>
           
-          <button
-            @click="endSession"
-            class="text-red-500 hover:text-red-700"
-            v-if="!isFinished && !editMode"
-          >
-            End Session
-          </button>
-        </div>
-      </div>
-      
-      <!-- Session Timer and Progress -->
-      <div v-if="!editMode" class="mb-8">
-        <div class="flex justify-between items-end mb-1">
-          <span class="text-sm text-gray-500 dark:text-gray-400">
-            {{ isOvertime ? 'Overtime' : 'Remaining' }}
-          </span>
-          <span class="text-sm text-gray-500 dark:text-gray-400">
-            Started at {{ formattedStartTime }}
-          </span>
-        </div>
-        
-        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 mb-1 overflow-hidden">
-          <div
-            class="h-full transition-all duration-1000"
-            :class="{
-              'bg-primary-500': !isOvertime,
-              'bg-amber-500': isOvertime
-            }"
-            :style="{ width: `${Math.min(progress, 100)}%` }"
-          ></div>
-        </div>
-        
-        <div class="flex justify-between items-center">
-          <div class="text-3xl font-bold" :class="{ 'text-amber-500': isOvertime }">
-            {{ isOvertime ? formattedElapsedTime : formattedTimeRemaining }}
-          </div>
-          
-          <div v-if="plannedDuration > 0" class="text-sm text-gray-500 dark:text-gray-400">
-            {{ formattedElapsedTime }} / {{ formatDuration(plannedDuration) }}
+          <div class="flex space-x-2">
+            <button
+              @click="toggleEditMode"
+              class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+              v-if="!isFinished"
+            >
+              <span v-if="editMode">Cancel Edit</span>
+              <span v-else>Edit Session</span>
+            </button>
+            
+            <button
+              @click="endSession"
+              class="text-red-500 hover:text-red-700"
+              v-if="!isFinished && !editMode"
+            >
+              End Session
+            </button>
           </div>
         </div>
-      </div>
-      
-      <!-- Calm Content (shown during active session) -->
-      <div v-if="!editMode && !isFinished" class="py-8">
-        <div class="text-center space-y-6">
-          <div class="bg-gray-50 dark:bg-gray-700 p-8 rounded-lg">
-            <p class="text-xl italic text-gray-600 dark:text-gray-300">
-              {{ randomQuote }}
-            </p>
+        
+        <!-- Session Content -->
+        <div v-if="!editMode && !isFinished" class="mb-12 space-y-8">
+          <!-- Session Goals -->
+          <div class="prose dark:prose-invert max-w-none markdown-preview bg-white/50 dark:bg-gray-900/50 p-6 rounded-lg border border-gray-200/50 dark:border-gray-700/50 text-left">
+            <vue-markdown-render v-if="sessionStore.activeSession.goals" :source="sessionStore.activeSession.goals"></vue-markdown-render>
+            <span v-else class="text-gray-500 dark:text-gray-400">No goals set</span>
           </div>
-        </div>
-      </div>
-      
-      <!-- Session Goals -->
-      <div v-if="!editMode" class="mt-6">
-        <h3 class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">Goals</h3>
-        <div class="prose dark:prose-invert max-w-none markdown-preview text-left">
-          <vue-markdown-render v-if="sessionStore.activeSession.goals" :source="sessionStore.activeSession.goals"></vue-markdown-render>
-          <span v-else>No goals set</span>
-        </div>
-      </div>
-      
-      <!-- Session Review (shown after session is finished) -->
-      <div v-if="isFinished && !editMode" class="mt-8 space-y-6">
-        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
-          Rate your focus for this session
-        </h3>
-        
-        <div class="flex flex-wrap gap-4">
-          <button
-            v-for="option in ratingOptions"
-            :key="option.value"
-            @click="selectedRating = option.value as SessionQuality"
-            class="flex flex-col items-center px-6 py-3 rounded-lg transition-all"
-            :class="{
-              'bg-gray-100 dark:bg-gray-700': selectedRating !== option.value,
-              'bg-primary-100 dark:bg-primary-900 ring-2 ring-primary-500': selectedRating === option.value
-            }"
-          >
-            <span class="text-2xl">{{ option.emoji }}</span>
-            <span class="mt-1 font-medium">{{ option.label }}</span>
-          </button>
-        </div>
-        
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Notes (optional)
-          </label>
-          <textarea
-            v-model="sessionNotes"
-            rows="3"
-            class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm font-mono"
-            placeholder="How did this session go? Any insights or challenges?"
-          ></textarea>
 
-          <!-- Notes Preview -->
-          <div v-if="sessionNotes" class="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Preview:</p>
-            <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none text-left">
-              <vue-markdown-render :source="sessionNotes"></vue-markdown-render>
+          <!-- Timer -->
+          <div class="bg-white/80 dark:bg-gray-800/80 rounded-lg p-6 shadow-sm">
+            <div class="flex justify-between items-end mb-3">
+              <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                {{ isOvertime ? 'Overtime' : 'Remaining' }}
+              </span>
+              <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                Started at {{ formattedStartTime }}
+              </span>
+            </div>
+            
+            <div class="w-full bg-gray-100 dark:bg-gray-700/50 rounded-full h-3 mb-3 overflow-hidden">
+              <div
+                class="h-full transition-all duration-1000"
+                :class="{
+                  'bg-gradient-to-r from-primary-400 to-primary-500': !isOvertime,
+                  'bg-gradient-to-r from-amber-400 to-amber-500': isOvertime
+                }"
+                :style="{ width: `${Math.min(progress, 100)}%` }"
+              ></div>
+            </div>
+            
+            <div class="flex justify-between items-baseline">
+              <div class="text-4xl font-bold tracking-tight" :class="{ 'text-amber-500': isOvertime }">
+                {{ isOvertime ? formattedElapsedTime : formattedTimeRemaining }}
+              </div>
+              
+              <div v-if="plannedDuration > 0" class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                {{ formattedElapsedTime }} / {{ formatDuration(plannedDuration) }}
+              </div>
             </div>
           </div>
+
+          <!-- Quote -->
+          <Transition
+            enter-active-class="transition-opacity duration-1000"
+            leave-active-class="transition-opacity duration-1000"
+            enter-from-class="opacity-0"
+            leave-to-class="opacity-0"
+          >
+            <div 
+              class="relative bg-gradient-to-br from-white/80 to-white/40 dark:from-gray-900/80 dark:to-gray-900/40 
+                     p-8 rounded-xl border border-gray-200/50 dark:border-gray-700/50 
+                     shadow-lg backdrop-blur-sm"
+              :key="randomQuote"
+            >
+              <div class="absolute inset-0 bg-primary-500/5 dark:bg-primary-400/5 rounded-xl"></div>
+              <p class="relative text-2xl italic text-gray-700 dark:text-gray-200 font-light leading-relaxed">
+                {{ randomQuote }}
+              </p>
+            </div>
+          </Transition>
         </div>
-        
-        <div class="flex justify-end space-x-3">
-          <button
-            @click="cancelSession"
-            class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
-          >
-            Cancel Session
-          </button>
+
+        <!-- Review Form -->
+        <div v-if="isFinished && !editMode" class="mt-12 space-y-8">
+          <div class="text-center">
+            <h3 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+              Rate your focus for this session
+            </h3>
+            <p class="text-gray-500 dark:text-gray-400">How well were you able to concentrate?</p>
+          </div>
           
-          <button
-            @click="submitRating"
-            class="btn btn-primary"
-            :disabled="!selectedRating || isSubmitting"
-          >
-            {{ isSubmitting ? 'Submitting...' : 'Submit Rating' }}
-          </button>
+          <div class="flex flex-wrap gap-4 justify-center">
+            <button
+              v-for="option in ratingOptions"
+              :key="option.value"
+              @click="selectedRating = option.value as SessionQuality"
+              class="group flex flex-col items-center px-8 py-4 rounded-xl transition-all duration-200"
+              :class="{
+                'bg-white/50 dark:bg-gray-900/50 hover:bg-white/80 dark:hover:bg-gray-900/80': selectedRating !== option.value,
+                'bg-primary-50 dark:bg-primary-900/50 ring-2 ring-primary-500 shadow-lg shadow-primary-500/10': selectedRating === option.value
+              }"
+            >
+              <span class="text-3xl transform transition-transform duration-200 group-hover:scale-110">{{ option.emoji }}</span>
+              <span class="mt-2 font-medium text-lg">{{ option.label }}</span>
+            </button>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Notes (optional)
+            </label>
+            <textarea
+              v-model="sessionNotes"
+              rows="3"
+              class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm font-mono"
+              placeholder="How did this session go? Any insights or challenges?"
+            ></textarea>
+
+            <!-- Notes Preview -->
+            <div v-if="sessionNotes" class="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
+              <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Preview:</p>
+              <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none">
+                <vue-markdown-render :source="sessionNotes"></vue-markdown-render>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex justify-end space-x-3">
+            <button
+              @click="cancelSession"
+              class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+            >
+              Cancel Session
+            </button>
+            
+            <button
+              @click="submitRating"
+              class="btn btn-primary"
+              :disabled="!selectedRating || isSubmitting"
+            >
+              {{ isSubmitting ? 'Submitting...' : 'Submit Rating' }}
+            </button>
+          </div>
         </div>
       </div>
-      
-      <!-- Edit Session Form -->
-      <div v-if="editMode" class="mt-6 space-y-4">
-        <h3 class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">Edit Session</h3>
+
+      <div v-else class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg p-8 text-center">
+        <p class="text-gray-700 dark:text-gray-300 mb-4">
+          There is no active focus session.
+        </p>
+        <RouterLink to="/" class="btn btn-primary">Start a new session</RouterLink>
+      </div>
+    </div>
+
+    <!-- Edit Session Modal -->
+    <div v-if="editMode" class="fixed inset-0 bg-gray-900/20 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] overflow-y-auto space-y-6">
+        <h3 class="text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200">Edit Session</h3>
         
         <div>
-          <label for="editTitle" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label for="editTitle" class="block text-base font-semibold text-gray-700 dark:text-gray-300 mb-2">
             Session Title
           </label>
           <input
             id="editTitle"
             v-model="editableSession.title"
             type="text"
-            class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
+            class="mt-1 block w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-lg"
           />
         </div>
         
         <div>
-          <label for="editGoals" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label for="editGoals" class="block text-base font-semibold text-gray-700 dark:text-gray-300 mb-2">
             Goals
-            <span class="text-xs">
+            <span class="text-sm font-normal">
               (<a href="https://www.markdownguide.org/basic-syntax/" target="_blank" class="text-primary-600 dark:text-primary-400 hover:underline">Markdown</a> supported)
             </span>
           </label>
@@ -170,16 +204,16 @@
           ></textarea>
           
           <!-- Markdown Preview -->
-          <div v-if="editableSession.goals" class="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Preview:</p>
-            <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none text-left">
+          <div v-if="editableSession.goals" class="mt-3 p-4 bg-gray-50/50 dark:bg-gray-900/50 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Preview:</p>
+            <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none text-[0.95em]">
               <vue-markdown-render :source="editableSession.goals"></vue-markdown-render>
             </div>
           </div>
         </div>
         
         <div>
-          <label for="editDuration" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label for="editDuration" class="block text-base font-semibold text-gray-700 dark:text-gray-300 mb-2">
             Planned Duration (minutes)
           </label>
           <input
@@ -188,50 +222,82 @@
             type="number"
             min="0"
             max="480"
-            class="mt-1 block w-48 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
+            class="mt-1 block w-48 px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-lg"
           />
         </div>
         
-        <div class="flex justify-end space-x-3 pt-2">
+        <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200 dark:border-gray-700">
           <button
             @click="editMode = false"
-            class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+            class="px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
           >
             Cancel
           </button>
           
           <button
             @click="saveSessionEdits"
-            class="btn btn-primary"
+            class="px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500
+                   text-white font-medium rounded-lg transition-all duration-200
+                   transform hover:scale-[1.02] active:scale-[0.98] 
+                   disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
             :disabled="isUpdating"
           >
-            {{ isUpdating ? 'Saving...' : 'Save Changes' }}
+            <span class="flex items-center space-x-2">
+              <span>{{ isUpdating ? 'Saving...' : 'Save Changes' }}</span>
+              <svg v-if="!isUpdating" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" class="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </span>
           </button>
         </div>
       </div>
-    </div>
-    
-    <!-- No active session message -->
-    <div v-else class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
-      <p class="text-gray-700 dark:text-gray-300 mb-4">
-        There is no active focus session.
-      </p>
-      <RouterLink to="/" class="btn btn-primary">Start a new session</RouterLink>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+// Vue core
 import { ref, computed, reactive, onMounted, watch } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
+
+// Stores and composables
 import { useSessionStore } from '../stores/sessionStore'
 import { useSessionTimer } from '../composables/useSessionTimer'
 import { useNotifications } from '../composables/useNotifications'
+
+// Utils and types
 import { formatDuration } from '../utils/sessionUtils'
 import type { SessionQuality } from '../types'
+
+// Third party
 import dayjs from 'dayjs'
 import VueMarkdownRender from 'vue-markdown-render'
 import 'marked'
+
+// Quotes
+const quotesList = {
+  meditation: "🌊 Like waves on the shore, let thoughts come and go. Stay with your breath.",
+  growth: "🌱 Each focused moment is a seed of growth. You're planting success.",
+  attention: "🎯 Your attention is like a gentle spotlight. Shine it on one thing at a time.",
+  mindfulness: "🍃 Be kind to your wandering mind. Gently guide it back when it drifts.",
+  present: "💫 Your energy flows where attention goes. Stay present.",
+  progress: "🌸 Progress blooms in small moments. This is one of them.",
+  perfection: "🌈 Let go of 'perfect.' Embrace 'present.'",
+  focus: "🎈 Hold your focus lightly, like a balloon string. Don't grip too tight.",
+  victory: "⭐ Each minute of focus is a victory. Celebrate the small wins.",
+  goals: "🌙 Like the moon pulls tides, let your goal gently draw you forward.",
+  peace: "🕊️ Peace lives in this moment. Not in past or future thoughts.",
+  persistence: "🌺 Your mind may wander. That's okay. Just keep coming back.",
+  growth2: "🌿 Growth happens in gentle moments like these.",
+  future: "🎨 You're painting your future with each focused breath.",
+  darkness: "✨ Just like stars need darkness to shine, focus emerges from chaos."
+}
+
+const quotes = Object.values(quotesList)
 
 // Router
 const router = useRouter()
@@ -279,30 +345,26 @@ const formattedStartTime = computed(() => {
 
 // Rating options
 const ratingOptions = [
-  { value: 'poor', label: 'Poor', emoji: '💩' },
-  { value: 'normal', label: 'Normal', emoji: '⚖️' },
-  { value: 'great', label: 'Great', emoji: '🔥' },
-  { value: 'deep', label: 'Deep Focus', emoji: '💠' },
+  { value: 'poor' as SessionQuality, label: 'Poor', emoji: '💩' },
+  { value: 'normal' as SessionQuality, label: 'Normal', emoji: '⚖️' },
+  { value: 'great' as SessionQuality, label: 'Great', emoji: '🔥' },
+  { value: 'deep' as SessionQuality, label: 'Deep Focus', emoji: '💠' },
 ]
 
-// Calming quotes
-const quotes = [
-  "Focus on the present moment.",
-  "Small steps lead to big results.",
-  "Take a deep breath and continue.",
-  "You're making progress, one minute at a time.",
-  "Don't worry about perfection. Just keep moving forward.",
-  "The work you do now will pay off later.",
-  "Stay calm and focused. You've got this.",
-  "Every moment of focus builds your ability to concentrate.",
-  "This is your time to create and accomplish.",
-  "Remember why you started.",
-]
 
-const randomQuote = computed(() => {
-  const randomIndex = Math.floor(Math.random() * quotes.length)
-  return quotes[randomIndex]
-})
+let currentQuoteIndex = Math.floor(Math.random() * quotes.length)
+const randomQuote = computed(() => quotes[currentQuoteIndex])
+
+// Quote rotation
+if (typeof window !== 'undefined') {
+  setInterval(() => {
+    let newIndex
+    do {
+      newIndex = Math.floor(Math.random() * quotes.length)
+    } while (newIndex === currentQuoteIndex)
+    currentQuoteIndex = newIndex
+  }, 180000)
+}
 
 // Methods
 const endSession = async () => {
@@ -316,14 +378,11 @@ const endSession = async () => {
 }
 
 const submitRating = async () => {
-  if (!selectedRating) return
+  if (!selectedRating.value) return
   
   isSubmitting.value = true
   
   try {
-    if (selectedRating.value === null) {
-      throw new Error('Please select a rating before submitting')
-    }
     await sessionStore.rateSession(selectedRating.value, sessionNotes.value)
     router.push('/')
   } catch (error) {
@@ -375,7 +434,7 @@ const saveSessionEdits = async () => {
   }
 }
 
-// Watch for session completion to show rating UI
+// Watchers
 watch(() => sessionStore.activeSession?.endTime, (newEndTime) => {
   if (newEndTime) {
     isFinished.value = true
@@ -387,17 +446,14 @@ onMounted(async () => {
   await initNotifications()
   loadSessionEdits()
   
-  // If session is already ended, show rating UI
   if (sessionStore.activeSession?.endTime) {
     isFinished.value = true
   }
   
-  // Start timer if session is active
   if (sessionStore.activeSession?.status === 'active') {
     startTimer()
   }
   
-  // If no active session, redirect to home
   if (!sessionStore.activeSession) {
     router.push('/')
   }
@@ -421,6 +477,7 @@ onMounted(async () => {
   padding: 0 0.25rem; 
   border-radius: 0.25rem; 
 }
+
 .dark .markdown-preview .prose code {
   background-color: rgba(255, 255, 255, 0.1);
 }
@@ -432,6 +489,7 @@ onMounted(async () => {
   overflow-x: auto;
   margin: 0.5rem 0;
 }
+
 .dark .markdown-preview .prose pre {
   background-color: rgba(255, 255, 255, 0.1);
 }
@@ -442,6 +500,7 @@ onMounted(async () => {
   font-style: italic;
   margin: 0.5rem 0;
 }
+
 .dark .markdown-preview .prose blockquote {
   border-color: rgba(255, 255, 255, 0.1);
 }
