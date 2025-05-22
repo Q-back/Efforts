@@ -87,6 +87,13 @@ export class StorageService {
   async deleteSession(id: string): Promise<void> {
     await db.focusSessions.delete(id)
   }
+
+  /**
+   * Update an existing focus session
+   */
+  async updateSession(session: FocusSession): Promise<string> {
+    return await db.focusSessions.put(session)
+  }
 }
 
 // Export a singleton instance

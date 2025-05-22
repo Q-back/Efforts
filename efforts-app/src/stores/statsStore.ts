@@ -109,5 +109,35 @@ export const useStatsStore = defineStore('stats', {
         this.isLoading = false
       }
     },
+    
+    /**
+     * Update an existing session
+     */
+    async updateSession(session: FocusSession): Promise<string> {
+      try {
+        this.isLoading = true
+        return await storageService.updateSession(session)
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to update session'
+        throw error
+      } finally {
+        this.isLoading = false
+      }
+    },
+    
+    /**
+     * Delete a session
+     */
+    async deleteSession(id: string): Promise<void> {
+      try {
+        this.isLoading = true
+        await storageService.deleteSession(id)
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to delete session'
+        throw error
+      } finally {
+        this.isLoading = false
+      }
+    },
   },
 })
