@@ -1,7 +1,9 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import type { FocusSession } from '../types'
+import { useNotifications } from './useNotifications'
 
 export function useSessionTimer(session: FocusSession | null) {
+  const { showSessionCompleteNotification } = useNotifications()
   const elapsedTime = ref(0) // in seconds
   const isOvertime = ref(false)
   const timerInterval = ref<number | null>(null)
@@ -91,9 +93,10 @@ export function useSessionTimer(session: FocusSession | null) {
     timerInterval.value = window.setInterval(() => {
       elapsedTime.value++
       
-      // Check for overtime
+      // Check for overtime and notify when first entering overtime
       if (!isOvertime.value && timeRemaining.value === 0) {
         isOvertime.value = true
+        showSessionCompleteNotification(session?.title)
       }
     }, 1000) as unknown as number
     

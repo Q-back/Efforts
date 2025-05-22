@@ -310,7 +310,6 @@ const endSession = async () => {
     stopTimer()
     await sessionStore.endSession()
     isFinished.value = true
-    await showSessionCompleteNotification(sessionStore.activeSession?.title)
   } catch (error) {
     console.error('Error ending session:', error)
   }
