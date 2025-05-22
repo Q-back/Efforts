@@ -73,7 +73,7 @@
       <!-- Session Goals -->
       <div v-if="!editMode" class="mt-6">
         <h3 class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">Goals</h3>
-        <div class="prose dark:prose-invert max-w-none markdown-preview">
+        <div class="prose dark:prose-invert max-w-none markdown-preview text-left">
           <vue-markdown-render v-if="sessionStore.activeSession.goals" :source="sessionStore.activeSession.goals"></vue-markdown-render>
           <span v-else>No goals set</span>
         </div>
@@ -164,7 +164,7 @@
           <!-- Markdown Preview -->
           <div v-if="editableSession.goals" class="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
             <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Preview:</p>
-            <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none">
+            <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none text-left">
               <vue-markdown-render :source="editableSession.goals"></vue-markdown-render>
             </div>
           </div>

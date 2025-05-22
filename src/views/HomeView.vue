@@ -35,7 +35,7 @@
           <!-- Markdown Preview -->
           <div v-if="goals" class="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
             <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Preview:</p>
-            <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none">
+            <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none text-left">
               <vue-markdown-render :source="goals"></vue-markdown-render>
             </div>
           </div>

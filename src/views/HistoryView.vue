@@ -90,7 +90,7 @@
         
         <div class="prose dark:prose-invert max-w-none mb-4">
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Goals:</h4>
-          <div class="text-sm markdown-preview">
+          <div class="text-sm markdown-preview text-left">
             <vue-markdown-render v-if="session.goals" :source="session.goals"></vue-markdown-render>
             <span v-else>No goals set</span>
           </div>
@@ -98,7 +98,7 @@
         
         <div v-if="session.notes" class="prose dark:prose-invert max-w-none mb-4">
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Notes:</h4>
-          <div class="text-sm markdown-preview">
+          <div class="text-sm markdown-preview text-left">
             <vue-markdown-render :source="session.notes"></vue-markdown-render>
           </div>
         </div>
@@ -166,7 +166,7 @@
             <!-- Markdown Preview -->
             <div v-if="editForm.goals" class="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
               <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Preview:</p>
-              <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none">
+              <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none text-left">
                 <vue-markdown-render :source="editForm.goals"></vue-markdown-render>
               </div>
             </div>
@@ -185,7 +185,7 @@
             <!-- Markdown Preview -->
             <div v-if="editForm.notes" class="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
               <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Preview:</p>
-              <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none">
+              <div class="markdown-preview prose dark:prose-invert prose-sm max-w-none text-left">
                 <vue-markdown-render :source="editForm.notes"></vue-markdown-render>
               </div>
             </div>
