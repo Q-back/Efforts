@@ -44,6 +44,19 @@ pnpm build
 pnpm preview
 ```
 
+## Deployment
+
+The app is automatically deployed to GitHub Pages when changes are pushed to the `master` branch via GitHub Actions CI/CD.
+
+### Manual Deployment
+
+You can manually deploy the app to GitHub Pages using:
+
+```bash
+# Build and deploy to GitHub Pages
+pnpm deploy
+```
+
 ## Contributing
 
 Please feel free to submit issues or pull requests to help improve the application.

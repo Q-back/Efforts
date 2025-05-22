@@ -5,11 +5,11 @@ import './style.css'
 import App from './App.vue'
 
 // Import routes
-import routes from './router'
+import routes from './router/index'
 
 // Create Vue Router instance
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
 
