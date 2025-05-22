@@ -6,7 +6,7 @@ import type { FocusSession, SessionQuality, SessionStats, ComparableStats } from
 export function extractSessionTitle(goals: string): string {
   if (!goals) return 'Untitled Session'
   const firstLine = goals.split('\n')[0]
-  return firstLine.replace(/^#+\s*/, '').trim() || 'Untitled Session'
+  return firstLine.replace(/^#+\s(.*)/, '$1').trim() || 'Untitled Session'
 }
 
 import dayjs from 'dayjs'
