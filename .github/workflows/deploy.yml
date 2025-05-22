@@ -38,6 +38,12 @@ jobs:
           version: 8
           run_install: false
       
+      - name: List directory contents (Debug)
+        run: |
+          echo "Workspace root contents:"
+          ls -la
+          echo ""
+          
       - name: Get pnpm store directory
         shell: bash
         run: |
@@ -51,11 +57,20 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
       
+      - name: Display pnpm version
+        run: pnpm --version
+      
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
       
       - name: Build
-        run: pnpm build
+        run: NODE_ENV=production pnpm build
+        
+      - name: Verify build output (Debug)
+        run: |
+          echo "Build output contents:"
+          ls -la dist/
+          echo ""
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
