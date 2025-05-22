@@ -1,10 +1,34 @@
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import type { FocusSession } from '../types'
 
 export function useSessionTimer(session: FocusSession | null) {
   const elapsedTime = ref(0) // in seconds
   const isOvertime = ref(false)
   const timerInterval = ref<number | null>(null)
+  const syncInterval = ref<number | null>(null)
+
+  /**
+   * Sync timer with real elapsed time from session start
+   */
+  const syncWithRealTime = () => {
+    if (!session?.startTime) return
+    const now = new Date()
+    const startTime = new Date(session.startTime)
+    const actualElapsed = Math.floor((now.getTime() - startTime.getTime()) / 1000)
+    elapsedTime.value = actualElapsed
+
+    // Check for overtime
+    if (session.plannedDuration > 0) {
+      isOvertime.value = actualElapsed > session.plannedDuration * 60
+    }
+  }
+
+  // Sync timer when window regains focus
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === 'visible') {
+      syncWithRealTime()
+    }
+  }
   
   /**
    * Calculate time remaining in the session (in seconds)
@@ -60,20 +84,10 @@ export function useSessionTimer(session: FocusSession | null) {
   const startTimer = () => {
     if (timerInterval.value) return
     
-    // Calculate initial elapsed time if session already started
-    if (session?.startTime) {
-      const now = new Date()
-      const startTime = new Date(session.startTime)
-      const initialElapsed = Math.floor((now.getTime() - startTime.getTime()) / 1000)
-      elapsedTime.value = initialElapsed
-      
-      // Check if we're already in overtime
-      if (session.plannedDuration > 0) {
-        isOvertime.value = initialElapsed > session.plannedDuration * 60
-      }
-    }
+    // Initial sync with real time
+    syncWithRealTime()
     
-    // Start the interval
+    // Start the intervals
     timerInterval.value = window.setInterval(() => {
       elapsedTime.value++
       
@@ -82,6 +96,9 @@ export function useSessionTimer(session: FocusSession | null) {
         isOvertime.value = true
       }
     }, 1000) as unknown as number
+    
+    // Start periodic sync (every minute)
+    syncInterval.value = window.setInterval(syncWithRealTime, 60000) as unknown as number
   }
   
   /**
@@ -91,6 +108,10 @@ export function useSessionTimer(session: FocusSession | null) {
     if (timerInterval.value) {
       clearInterval(timerInterval.value)
       timerInterval.value = null
+    }
+    if (syncInterval.value) {
+      clearInterval(syncInterval.value)
+      syncInterval.value = null
     }
   }
   
@@ -107,11 +128,20 @@ export function useSessionTimer(session: FocusSession | null) {
   onMounted(() => {
     if (session?.status === 'active') {
       startTimer()
+      document.addEventListener('visibilitychange', handleVisibilityChange)
     }
   })
   
   onUnmounted(() => {
     stopTimer()
+    document.removeEventListener('visibilitychange', handleVisibilityChange)
+  })
+
+  // Watch for session status changes
+  watch(() => session?.status, (newStatus) => {
+    if (newStatus !== 'active') {
+      stopTimer()
+    }
   })
   
   return {

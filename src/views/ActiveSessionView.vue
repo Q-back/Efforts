@@ -237,7 +237,8 @@ const {
   progress,
   formattedTimeRemaining,
   formattedElapsedTime,
-  startTimer
+  startTimer,
+  stopTimer
 } = useSessionTimer(sessionStore.activeSession)
 
 // Notifications
@@ -298,6 +299,7 @@ const randomQuote = computed(() => {
 // Methods
 const endSession = async () => {
   try {
+    stopTimer()
     await sessionStore.endSession()
     isFinished.value = true
     await showSessionCompleteNotification(sessionStore.activeSession?.title)
