@@ -16,7 +16,7 @@ export const useSessionStore = defineStore('session', {
     hasActiveSession: (state) => state.activeSession !== null,
     
     totalPointsToday: (state) => {
-      return state.todaySessions.reduce((sum, session) => sum + session.points, 0)
+      return state.todaySessions.reduce((sum, session) => sum + calculateSessionPoints(session), 0)
     },
     
     totalMinutesToday: (state) => {
@@ -47,7 +47,6 @@ export const useSessionStore = defineStore('session', {
           overtime: 0,
           quality: null,
           notes: '',
-          points: 0,
           status: 'active',
         }
         
@@ -149,9 +148,6 @@ export const useSessionStore = defineStore('session', {
           notes,
           status: 'completed' as const,
         }
-        
-        // Calculate points
-        updatedSession.points = calculateSessionPoints(updatedSession)
         
         // Save to storage
         await storageService.saveSession(updatedSession)

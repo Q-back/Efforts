@@ -11,7 +11,6 @@ export interface FocusSession {
   overtime: number // in minutes
   quality: SessionQuality | null // null means not yet rated
   notes: string
-  points: number
   status: 'active' | 'completed' | 'cancelled'
 }
 

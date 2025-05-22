@@ -82,7 +82,7 @@ export function calculateStats(sessions: FocusSession[]): SessionStats {
   const totalFocusTime = completedSessions.reduce((sum, session) => sum + session.actualDuration, 0)
   
   // Calculate total points
-  const totalPoints = completedSessions.reduce((sum, session) => sum + session.points, 0)
+  const totalPoints = completedSessions.reduce((sum, session) => sum + calculateSessionPoints(session), 0)
   
   // Calculate quality distribution
   const qualityDistribution = {

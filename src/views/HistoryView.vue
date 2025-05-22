@@ -62,7 +62,7 @@
             </span>
             
             <span class="text-primary-600 dark:text-primary-400 font-bold text-sm sm:text-base">
-              {{ session.points }} pts
+              {{ calculateSessionPoints(session) }} pts
             </span>
             
             <div class="flex items-center gap-1">
@@ -297,7 +297,7 @@
 import { ref, computed, onMounted } from 'vue'
 import type { FocusSession, SessionQuality } from '../types'
 import { useStatsStore } from '../stores/statsStore'
-import { formatDuration, getQualityEmoji } from '../utils/sessionUtils'
+import { formatDuration, getQualityEmoji, calculateSessionPoints } from '../utils/sessionUtils'
 import { useSessionExport } from '../composables/useSessionExport'
 import dayjs from 'dayjs'
 import VueMarkdownRender from 'vue-markdown-render'
@@ -455,12 +455,6 @@ const saveEditedSession = async () => {
       quality: editForm.value.quality
     }
     
-    // Recalculate points if quality changed
-    if (editForm.value.quality !== sessionToEdit.value.quality) {
-      // Import the same calculation function used when rating sessions
-      const { calculateSessionPoints } = await import('../utils/sessionUtils')
-      updatedSession.points = calculateSessionPoints(updatedSession)
-    }
     
     // Save using stats store
     await statsStore.updateSession(updatedSession)
