@@ -250,7 +250,7 @@ const {
 } = useSessionTimer(sessionStore.activeSession)
 
 // Notifications
-const { initNotifications, showSessionCompleteNotification } = useNotifications()
+const { initNotifications } = useNotifications()
 
 // Session state
 const isFinished = ref(false)
