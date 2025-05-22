@@ -1,0 +1,7 @@
+name: GitHub Pages Configuration
+# This file helps GitHub recognize the GitHub Pages configuration for the repository
+
+build:
+  source: "gh-pages"  # Deploy from the gh-pages branch
+  publish: "/"        # Publish from the root directory
+  allow_jekyll: false # Don't process the pages with Jekyll
