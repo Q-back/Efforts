@@ -1,10 +1,10 @@
 import { defineConfig } from 'vite'
-import type { UserConfig as VitestUserConfig } from 'vitest/config'
+import type { ViteUserConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({
   test: {
     globals: true,
     environment: 'jsdom',
@@ -22,4 +22,4 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   }
-})
+}) as ViteUserConfig)
