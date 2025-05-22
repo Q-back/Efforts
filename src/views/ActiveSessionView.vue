@@ -8,7 +8,7 @@
         
         <div class="flex space-x-2">
           <button
-            @click="editMode = !editMode"
+            @click="toggleEditMode"
             class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
             v-if="!isFinished"
           >
@@ -348,6 +348,13 @@ const loadSessionEdits = () => {
   editableSession.title = sessionStore.activeSession.title
   editableSession.goals = sessionStore.activeSession.goals
   editableSession.plannedDuration = sessionStore.activeSession.plannedDuration
+}
+
+const toggleEditMode = () => {
+  if (!editMode.value) {
+    loadSessionEdits()
+  }
+  editMode.value = !editMode.value
 }
 
 const saveSessionEdits = async () => {
